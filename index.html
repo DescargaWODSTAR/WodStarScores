@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WOD Scores</title>
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #38bdf8;
+      --light: #f1f5f9;
+      --dark: #1e293b;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      background: var(--primary);
+      color: var(--light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    select, button {
+      padding: 0.6rem;
+      margin: 0.5rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-size: 1rem;
+    }
+    table {
+      width: 100%;
+      max-width: 900px;
+      margin-top: 1rem;
+      border-collapse: collapse;
+      background: var(--dark);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--primary);
+    }
+    tr:nth-child(even) {
+      background: #334155;
+    }
+    tr:hover {
+      background: #475569;
+      cursor: pointer;
+    }
+    .medal {
+      font-size: 1.2rem;
+    }
+    .gold { color: gold; }
+    .silver { color: silver; }
+    .bronze { color: peru; }
+    .category {
+      margin-top: 2rem;
+      color: var(--accent);
+      font-size: 1.5rem;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Ingresar Competencia</h1>
+  <select id="competenciaSelect">
+    <option value="">Selecciona una competencia</option>
+    <option value="pruebaIndividual">Prueba Individual</option>
+    <option value="pruebaEquipos">Prueba Equipos</option>
+  </select>
+  <button onclick="mostrarCompetencia()">Ingresar</button>
+
+  <div id="tablas"></div>
+
+  <script>
+    const datos = {
+      pruebaIndividual: {
+        principiantes: [
+          { nombre: "Ana López", lugar: "CDMX", wod: [80, 75, 90] },
+          { nombre: "Luis Pérez", lugar: "Puebla", wod: [60, 80, 70] },
+          { nombre: "Juanita Ríos", lugar: "CDMX", wod: [95, 85, 90] },
+        ],
+        intermedios: [
+          { nombre: "Carlos Díaz", lugar: "GDL", wod: [85, 88, 92] },
+          { nombre: "Miguel Torres", lugar: "CDMX", wod: [75, 80, 85] }
+        ],
+        avanzados: []
+      },
+      pruebaEquipos: {
+        principiantes: [
+          { equipo: "Titanes", atletas: ["Ana", "Luis"], wod: [80, 85, 90] },
+          { equipo: "Relámpagos", atletas: ["Pedro", "Sofía"], wod: [70, 75, 80] }
+        ],
+        intermedios: [],
+        avanzados: []
+      }
+    };
+
+    function mostrarCompetencia() {
+      const seleccion = document.getElementById("competenciaSelect").value;
+      const contenedor = document.getElementById("tablas");
+      contenedor.innerHTML = "";
+      if (!seleccion) return;
+
+      const datosCompetencia = datos[seleccion];
+      Object.entries(datosCompetencia).forEach(([categoria, atletas]) => {
+        let html = `<div class='category'>${categoria.toUpperCase()}</div><table><thead><tr>`;
+        if (seleccion === "pruebaIndividual") {
+          html += "<th>#</th><th>Nombre</th><th>Lugar</th><th>Total</th></tr></thead><tbody>";
+          atletas
+            .map(a => ({ ...a, total: a.wod.reduce((s, x) => s + x, 0) }))
+            .sort((a, b) => b.total - a.total)
+            .forEach((a, i) => {
+              let medalla = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
+              html += `<tr onclick='verAtleta(${JSON.stringify(a)})'><td>${medalla}</td><td>${a.nombre}</td><td>${a.lugar}</td><td>${a.total}</td></tr>`;
+            });
+        } else {
+          html += "<th>#</th><th>Equipo</th><th>Total</th></tr></thead><tbody>";
+          atletas
+            .map(e => ({ ...e, total: e.wod.reduce((s, x) => s + x, 0) }))
+            .sort((a, b) => b.total - a.total)
+            .forEach((e, i) => {
+              let medalla = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
+              html += `<tr onclick='verEquipo(${JSON.stringify(e)})'><td>${medalla}</td><td>${e.equipo}</td><td>${e.total}</td></tr>`;
+            });
+        }
+        html += "</tbody></table>";
+        contenedor.innerHTML += html;
+      });
+    }
+
+    function verAtleta(a) {
+      alert(`${a.nombre}\nLugar: ${a.lugar}\nWOD1: ${a.wod[0]}\nWOD2: ${a.wod[1]}\nWOD3: ${a.wod[2]}\nTotal: ${a.wod.reduce((s, x) => s + x, 0)}`);
+    }
+
+    function verEquipo(e) {
+      alert(`Equipo: ${e.equipo}\nAtleta 1: ${e.atletas[0]}\nAtleta 2: ${e.atletas[1]}\nWOD1: ${e.wod[0]}\nWOD2: ${e.wod[1]}\nWOD3: ${e.wod[2]}\nTotal: ${e.wod.reduce((s, x) => s + x, 0)}`);
+    }
+  </script>
+</body>
+</html>

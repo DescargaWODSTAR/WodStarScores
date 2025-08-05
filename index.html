@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOD Scores</title>
+  <title>WODStar Scores</title>
   <style>
     :root {
       --primary: #0f172a;
@@ -57,18 +57,52 @@
       background: #475569;
       cursor: pointer;
     }
-    .medal {
-      font-size: 1.2rem;
-    }
-    .gold { color: gold; }
-    .silver { color: silver; }
-    .bronze { color: peru; }
     .category {
       margin-top: 2rem;
       color: var(--accent);
       font-size: 1.5rem;
     }
-    .hidden { display: none; }
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: var(--dark);
+      border-radius: 1rem;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      position: relative;
+      animation: popin 0.3s ease;
+    }
+    .modal h2 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .modal p {
+      margin: 0.5rem 0;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--light);
+      cursor: pointer;
+    }
+    @keyframes popin {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -76,33 +110,148 @@
   <select id="competenciaSelect">
     <option value="">Selecciona una competencia</option>
     <option value="pruebaIndividual">Prueba Individual</option>
-    <option value="pruebaEquipos">Prueba Equipos</option>
+    <option value="pruebaEquipos">Phoenix</option>
   </select>
   <button onclick="mostrarCompetencia()">Ingresar</button>
 
   <div id="tablas"></div>
+  <div id="modalContainer"></div>
 
   <script>
     const datos = {
       pruebaIndividual: {
         principiantes: [
-          { nombre: "Ana López", lugar: "CDMX", wod: [80, 75, 90] },
-          { nombre: "Luis Pérez", lugar: "Puebla", wod: [60, 80, 70] },
-          { nombre: "Juanita Ríos", lugar: "CDMX", wod: [95, 85, 90] },
+          {
+            nombre: "Ana López",
+            lugar: "CDMX",
+            resultados: [
+              { descripcion: "WOD 1 - Sprint 400m", valor: "1:20", puntos: 80 },
+              { descripcion: "WOD 2 - Fran", valor: "150 reps", puntos: 75 },
+              { descripcion: "WOD 3 - Pull-Ups", valor: "30 reps", puntos: 90 },
+              { descripcion: "Final RM Clean & Jerk", valor: "85 kg / 187 lb", puntos: 85 }
+            ]
+          },
+          {
+            nombre: "Luis Pérez",
+            lugar: "Puebla",
+            resultados: [
+              { descripcion: "WOD 1 - Sprint 400m", valor: "1:25", puntos: 70 },
+              { descripcion: "WOD 2 - Fran", valor: "140 reps", puntos: 70 },
+              { descripcion: "WOD 3 - Pull-Ups", valor: "28 reps", puntos: 85 },
+              { descripcion: "Final RM Clean & Jerk", valor: "75 kg / 165 lb", puntos: 75 }
+            ]
+          }
         ],
-        intermedios: [
-          { nombre: "Carlos Díaz", lugar: "GDL", wod: [85, 88, 92] },
-          { nombre: "Miguel Torres", lugar: "CDMX", wod: [75, 80, 85] }
-        ],
+        intermedios: [],
         avanzados: []
       },
       pruebaEquipos: {
         principiantes: [
-          { equipo: "Titanes", atletas: ["Ana", "Luis"], wod: [80, 85, 90] },
-          { equipo: "Relámpagos", atletas: ["Pedro", "Sofía"], wod: [70, 75, 80] }
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          },
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          }
         ],
-        intermedios: [],
-        avanzados: []
+        intermedios: [
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          },
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          },
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          },
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          }
+        ],
+        avanzados: [
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          },
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          },
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          },
+          {
+            equipo: "NOMBREEQUIPO",
+            atletas: ["Ana", "Luis"],
+            resultados: [
+              { descripcion: "WOD 1 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2 -NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 3 - NombreWod", valor: "0 reps", puntos: 0 },
+              { descripcion: "Final NombreWod", valor: "0 kg / 0 lb", puntos: 0 }
+            ]
+          }
+        ]
       }
     };
 
@@ -118,20 +267,20 @@
         if (seleccion === "pruebaIndividual") {
           html += "<th>#</th><th>Nombre</th><th>Lugar</th><th>Total</th></tr></thead><tbody>";
           atletas
-            .map(a => ({ ...a, total: a.wod.reduce((s, x) => s + x, 0) }))
+            .map(a => ({ ...a, total: a.resultados.reduce((s, x) => s + x.puntos, 0) }))
             .sort((a, b) => b.total - a.total)
             .forEach((a, i) => {
-              let medalla = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
-              html += `<tr onclick='verAtleta(${JSON.stringify(a)})'><td>${medalla}</td><td>${a.nombre}</td><td>${a.lugar}</td><td>${a.total}</td></tr>`;
+              let lugarDisplay = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1);
+              html += `<tr onclick='verAtleta(${JSON.stringify(a)})'><td>${lugarDisplay}</td><td>${a.nombre}</td><td>${a.lugar}</td><td>${a.total}</td></tr>`;
             });
         } else {
           html += "<th>#</th><th>Equipo</th><th>Total</th></tr></thead><tbody>";
           atletas
-            .map(e => ({ ...e, total: e.wod.reduce((s, x) => s + x, 0) }))
+            .map(e => ({ ...e, total: e.resultados.reduce((s, x) => s + x.puntos, 0) }))
             .sort((a, b) => b.total - a.total)
             .forEach((e, i) => {
-              let medalla = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
-              html += `<tr onclick='verEquipo(${JSON.stringify(e)})'><td>${medalla}</td><td>${e.equipo}</td><td>${e.total}</td></tr>`;
+              let lugarDisplay = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1);
+              html += `<tr onclick='verEquipo(${JSON.stringify(e)})'><td>${lugarDisplay}</td><td>${e.equipo}</td><td>${e.total}</td></tr>`;
             });
         }
         html += "</tbody></table>";
@@ -140,11 +289,25 @@
     }
 
     function verAtleta(a) {
-      alert(`${a.nombre}\nLugar: ${a.lugar}\nWOD1: ${a.wod[0]}\nWOD2: ${a.wod[1]}\nWOD3: ${a.wod[2]}\nTotal: ${a.wod.reduce((s, x) => s + x, 0)}`);
+      let html = `<div class="modal-bg" onclick="cerrarModal(event)"><div class="modal" onclick="event.stopPropagation()"><button class="close-btn" onclick="cerrarModal(event)">×</button><h2>${a.nombre}</h2><p><strong>Lugar:</strong> ${a.lugar}</p>`;
+      a.resultados.forEach(r => {
+        html += `<p><strong>${r.descripcion}:</strong> ${r.valor} → ${r.puntos} pts</p>`;
+      });
+      html += `<p><strong>Total:</strong> ${a.resultados.reduce((s, x) => s + x.puntos, 0)}</p></div></div>`;
+      document.getElementById("modalContainer").innerHTML = html;
     }
 
     function verEquipo(e) {
-      alert(`Equipo: ${e.equipo}\nAtleta 1: ${e.atletas[0]}\nAtleta 2: ${e.atletas[1]}\nWOD1: ${e.wod[0]}\nWOD2: ${e.wod[1]}\nWOD3: ${e.wod[2]}\nTotal: ${e.wod.reduce((s, x) => s + x, 0)}`);
+      let html = `<div class="modal-bg" onclick="cerrarModal(event)"><div class="modal" onclick="event.stopPropagation()"><button class="close-btn" onclick="cerrarModal(event)">×</button><h2>${e.equipo}</h2><p><strong>Atletas:</strong> ${e.atletas.join(" & ")}</p>`;
+      e.resultados.forEach(r => {
+        html += `<p><strong>${r.descripcion}:</strong> ${r.valor} → ${r.puntos} pts</p>`;
+      });
+      html += `<p><strong>Total:</strong> ${e.resultados.reduce((s, x) => s + x.puntos, 0)}</p></div></div>`;
+      document.getElementById("modalContainer").innerHTML = html;
+    }
+
+    function cerrarModal() {
+      document.getElementById("modalContainer").innerHTML = "";
     }
   </script>
 </body>

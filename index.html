@@ -119,6 +119,21 @@
   font-family: monospace;
 }
 
+@media screen and (max-width: 500px) {
+  .modal {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+  .modal h2 {
+    font-size: 1.2rem;
+  }
+  .modal p {
+    font-size: 0.85rem;
+  }
+}
+
+
+
   </style>
 </head>
 <body>
@@ -144,10 +159,10 @@
           heat: "  1",
           carril: "  1",
           resultados: [
-            { descripcion: "WOD 1", valor: "0 reps", puntos: 0 },
-            { descripcion: "WOD 2", valor: "0 reps", puntos: 0 },
-            { descripcion: "WOD 3", valor: "0 reps", puntos: 0 },
-            { descripcion: "Final", valor: "0 reps", puntos: 0 }
+            { descripcion: "WOD 1", valor: "0 reps", puntos: 0},
+            { descripcion: "WOD 2", valor: "0 reps", puntos:0},
+            { descripcion: "Wod3", valor: "0 reps", puntos: 0},
+            { descripcion: "Final", valor: "0 reps", puntos: 0  },
           ]
         },
 
@@ -157,9 +172,9 @@
              heat: "  1",
               carril: " 2",
             resultados: [
-              { descripcion: "WOD 1", valor: "0 reps", puntos: 0  },
+              { descripcion: "WOD 1", valor: "0 reps", puntos:0},
               { descripcion: "WOD 2", valor: "0 reps", puntos: 0 },
-              { descripcion: "WOD 3", valor: "0 reps", puntos: 0 },
+             { descripcion: "WOD 2", valor: "0 reps", puntos: 0 },
               { descripcion: "Final", valor: "0 reps", puntos:0 }
             ]
           },
@@ -183,7 +198,7 @@
             carril: "  4",
             resultados: [
               { descripcion: "WOD 1", valor: "0 reps", puntos: 0  },
-              { descripcion: "WOD 2", valor: "0 reps", puntos: 0 },
+              { descripcion: "WOD 2", valor: "0 reps", puntos: 0 },  
               { descripcion: "WOD 3", valor: "0 reps", puntos: 0},
               { descripcion: "Final", valor: "0 reps", puntos: 0 }
             ]
@@ -414,7 +429,8 @@
               heat: "  1",
               carril: " 3",
             resultados: [
-              { descripcion: "WOD 1", valor: "0 reps", puntos: 0 },
+             
+              { descripcion: "WOD 1", valor: "0 reps", puntos: 45},
               { descripcion: "WOD 2", valor: "0 reps", puntos: 0 },
               { descripcion: "WOD 3", valor: "0 reps", puntos: 0 },
               { descripcion: "Final", valor: "0", puntos: 0 }
@@ -740,6 +756,7 @@
       origin: { y: 0.6 }
     });
   }
+ 
 
   let html = `<div class="modal-bg" onclick="cerrarModal(event)">
                 <div class="modal" onclick="event.stopPropagation()">
@@ -763,11 +780,18 @@
     function cerrarModal() {
       document.getElementById("modalContainer").innerHTML = "";
     }
+
+
+
+    
   </script>
+
 <footer style="text-align: center; padding: 15px; background-color: #0f172a; color: white; font-size: 14px; margin-top: 40px;">
   ¿Quieres contratar este servicio para tu competencia?<br />
   📧 Contacto: <a href="mailto:wodstarsoporte@gmail.com" style="color: #38bdf8; text-decoration: none;">wodstarsoporte@gmail.com</a>
+
 </footer>
+
 
 
 </body>
